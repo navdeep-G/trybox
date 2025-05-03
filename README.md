@@ -18,6 +18,30 @@
 
 📄 Details on how to use trybox will be added here.
 
+## 🧪 Example
+
+1. Open a terminal and activate your virtual environment, if using one:
+    ```
+    source venv/bin/activate
+    ```
+
+2. Run the main interface:
+    ```
+    python -m trybox.main
+    ```
+
+3. Choose option `[1]` to create a new snippet  
+   You'll be prompted to enter a description and some code.
+
+4. Example input:
+    ```
+    Enter tag/description: hello world
+    Enter your Python code. End with a blank line.
+    print("Hello from TryBox!")
+    ```
+
+5. After saving, run the snippet again with option `[2]`.
+
 ## ⚖️ License
 
 📜 This project is licensed under the Apache License, Version 2.0.
