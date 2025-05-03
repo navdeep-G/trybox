@@ -7,17 +7,23 @@ SNIPPET_DIR = os.path.join(os.path.dirname(__file__), "../snippets")
 os.makedirs(SNIPPET_DIR, exist_ok=True)
 
 def new_snippet():
-    tag = input("Enter tag/description: ")
-    print("Enter your Python code. End with a blank line.")
-    lines = []
-    while True:
-        line = input()
-        if not line:
-            break
-        lines.append(line)
-    code = "\n".join(lines)
+    tag = input("Enter tag/description: ").strip()
+    if not tag:
+        print("❌ Tag is required.")
+        return
+
+    print("📝 Opening your editor to write the snippet...")
+    code = get_user_code_via_editor()
+
+    if not code.strip():
+        print("⚠️ No code entered. Snippet not saved.")
+        return
+
     filename = save_snippet(code, tag, SNIPPET_DIR)
-    print(f"Saved to {filename}")
+    print(f"✅ Snippet saved to {filename}")
+
+    print("\n🚀 Running your snippet...\n")
+    run_snippet(code)
 
 def run_existing():
     snippets = list_snippets(SNIPPET_DIR)
@@ -27,6 +33,23 @@ def run_existing():
     filename, _ = snippets[choice]
     code = load_snippet(filename)
     run_snippet(code)
+
+import os
+import tempfile
+import subprocess
+
+def get_user_code_via_editor() -> str:
+    editor = os.environ.get("EDITOR", "vi")
+    with tempfile.NamedTemporaryFile(suffix=".py", delete=False) as tmp:
+        tmp_path = tmp.name
+
+    subprocess.call([editor, tmp_path])
+
+    with open(tmp_path, "r") as f:
+        code = f.read()
+
+    os.remove(tmp_path)
+    return code
 
 def main():
     print("TryBox - Python Snippet Runner")
