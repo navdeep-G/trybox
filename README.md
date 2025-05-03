@@ -55,6 +55,20 @@
 
 6. Or, choose option `[2]` from the main menu to run it manually later.
 
+## ❓ Why trybox?
+
+While traditional IDEs like PyCharm or VS Code are powerful, they can feel heavy for quick tasks. **trybox** is designed for developers who want a fast, terminal-based way to write, save, and run short Python experiments without switching context or managing scratch files.
+
+**trybox is ideal for:**
+
+- ⚡ Rapid prototyping or testing one-off ideas
+- 🧪 Running isolated code safely without polluting your workspace
+- 🧠 Keeping a searchable archive of past experiments
+- 🖥 Working in minimal or remote environments without a GUI
+- 🧰 Building a habit of local, organized experimentation
+
+It's a personal Python scratchpad — clean, efficient, and always ready in your terminal.
+
 ## ⚖️ License
 
 📜 This project is licensed under the Apache License, Version 2.0.
