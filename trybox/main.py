@@ -6,6 +6,13 @@ from utils import save_snippet, list_snippets, load_snippet
 SNIPPET_DIR = os.path.join(os.path.dirname(__file__), "../snippets")
 os.makedirs(SNIPPET_DIR, exist_ok=True)
 
+from rich import print
+from rich.panel import Panel
+from rich.prompt import Prompt
+from rich.console import Console
+
+console = Console()
+
 def new_snippet():
     tag = input("Enter tag/description: ").strip()
     if not tag:
@@ -20,19 +27,36 @@ def new_snippet():
         return
 
     filename = save_snippet(code, tag, SNIPPET_DIR)
-    print(f"✅ Snippet saved to {filename}")
+    console.print(f"[green]✅ Snippet saved to [bold]{filename}[/bold][/green]")
 
     print("\n🚀 Running your snippet...\n")
     run_snippet(code)
 
+from rich.panel import Panel
+from rich.console import Console
+
+console = Console()
+
 def run_existing():
     snippets = list_snippets(SNIPPET_DIR)
+    if not snippets:
+        console.print("[yellow]📭 No saved snippets found.[/yellow]")
+        return
+
     for i, (fname, tag) in enumerate(snippets):
         print(f"[{i}] {tag} ({fname})")
-    choice = int(input("Select snippet to run: "))
-    filename, _ = snippets[choice]
-    code = load_snippet(filename)
-    run_snippet(code)
+
+    try:
+        choice = int(input("Select snippet to run: "))
+        filename, _ = snippets[choice]
+        code = load_snippet(filename)
+
+        # 👇 Add this line here to preview the snippet before running
+        console.print(Panel(code, title="🧾 Snippet Preview", subtitle=filename))
+
+        run_snippet(code)
+    except (IndexError, ValueError):
+        console.print("[red]❌ Invalid selection.[/red]")
 
 import os
 import tempfile
@@ -52,10 +76,14 @@ def get_user_code_via_editor() -> str:
     return code
 
 def main():
-    print("TryBox - Python Snippet Runner")
-    print("[1] New Snippet")
-    print("[2] Run Existing")
-    choice = input("Select option: ")
+    console.print(Panel.fit("[bold cyan]🧪 TryBox[/bold cyan]\nLocal Python Snippet Runner", title="Welcome"))
+
+    print("[1] ✍️  New Snippet")
+    print("[2] ▶️  Run Existing")
+    print("[3] ❌ Exit")
+
+    choice = Prompt.ask("👉 Select an option", choices=["1", "2", "3"], default="1")
+
     if choice == "1":
         new_snippet()
     elif choice == "2":
