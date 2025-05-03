@@ -31,16 +31,29 @@
     ```
 
 3. Choose option `[1]` to create a new snippet  
-   You'll be prompted to enter a description and some code.
+   You'll be prompted to enter a description and write your code in your editor.
 
 4. Example input:
     ```
-    Enter tag/description: hello world
-    Enter your Python code. End with a blank line.
-    print("Hello from TryBox!")
+    Enter tag/description: greet user
     ```
 
-5. After saving, run the snippet again with option `[2]`.
+    In your editor, write the following code and save:
+
+    ```python
+    name = input("What is your name? ")
+    print(f"Hello, {name}! Welcome to TryBox.")
+    ```
+
+5. After saving, your snippet will be stored.  
+   If auto-run is enabled, you’ll immediately see something like:
+
+    ```
+    What is your name? Alice
+    Hello, Alice! Welcome to TryBox.
+    ```
+
+6. Or, choose option `[2]` from the main menu to run it manually later.
 
 ## ⚖️ License
 
