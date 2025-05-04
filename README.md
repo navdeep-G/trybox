@@ -54,18 +54,6 @@ TryBox is like a personal Python scratchpad — but with memory, structure, and 
 
 It's a personal Python scratchpad — clean, efficient, and always ready in your terminal.
 
-## 📦 Installation
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/youruser/trybox.git
-   cd trybox
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   python -m trybox.main
-
 ## 🧪 Example
 
 1. Open a terminal and activate your virtual environment, if using one:
