@@ -37,10 +37,6 @@ Even if you already use PyCharm or another IDE, trybox still fills an important 
 
 **TryBox complements IDEs** — it’s not a replacement. Use your IDE for structured dev work, and use trybox when you just want to experiment.
 
-## 📦 Installation
-
-📄 Instructions for installing trybox will be added here.
-
 ## ▶️ Usage
 
 📄 Details on how to use trybox will be added here.
