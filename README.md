@@ -10,6 +10,33 @@
 - 🔒 Fully offline — no telemetry or cloud sync  
 - 🐍 Built with the Python standard library only  
 
+## ❓ Why trybox?
+
+While traditional IDEs like PyCharm or VS Code are powerful, they can feel heavy for quick tasks. **trybox** is designed for developers who want a fast, terminal-based way to write, save, and run short Python experiments without switching context or managing scratch files.
+
+**trybox is ideal for:**
+
+- ⚡ Rapid prototyping or testing one-off ideas  
+- 🧪 Running isolated code safely without polluting your workspace  
+- 🧠 Keeping a searchable archive of past experiments  
+- 🖥 Working in minimal or remote environments without a GUI  
+- 🧰 Building a habit of local, organized experimentation  
+
+It's a personal Python scratchpad — clean, efficient, and always ready in your terminal.
+
+## 🆚 Why not just use PyCharm?
+
+Even if you already use PyCharm or another IDE, trybox still fills an important gap:
+
+- **🚧 Isolation** – You can prototype without touching your project structure  
+- **⚡ Speed** – No need to open a GUI or manage files — launch from the terminal instantly  
+- **📁 Clean Workspace** – Keeps scratch code out of your repo  
+- **🧠 Snippet History** – Snippets are saved, timestamped, and searchable — unlike PyCharm scratch files  
+- **🖥 Headless Support** – Perfect for remote servers, SSH, or containers where GUI tools aren’t available  
+- **💥 Safety** – Snippets run in isolated subprocesses, with support for timeouts and future sandboxing
+
+**TryBox complements IDEs** — it’s not a replacement. Use your IDE for structured dev work, and use trybox when you just want to experiment.
+
 ## 📦 Installation
 
 📄 Instructions for installing trybox will be added here.
@@ -54,20 +81,6 @@
     ```
 
 6. Or, choose option `[2]` from the main menu to run it manually later.
-
-## ❓ Why trybox?
-
-While traditional IDEs like PyCharm or VS Code are powerful, they can feel heavy for quick tasks. **trybox** is designed for developers who want a fast, terminal-based way to write, save, and run short Python experiments without switching context or managing scratch files.
-
-**trybox is ideal for:**
-
-- ⚡ Rapid prototyping or testing one-off ideas
-- 🧪 Running isolated code safely without polluting your workspace
-- 🧠 Keeping a searchable archive of past experiments
-- 🖥 Working in minimal or remote environments without a GUI
-- 🧰 Building a habit of local, organized experimentation
-
-It's a personal Python scratchpad — clean, efficient, and always ready in your terminal.
 
 ## ⚖️ License
 
