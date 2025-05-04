@@ -37,9 +37,17 @@ Even if you already use PyCharm or another IDE, trybox still fills an important 
 
 **TryBox complements IDEs** — it’s not a replacement. Use your IDE for structured dev work, and use trybox when you just want to experiment.
 
-## ▶️ Usage
+## 📦 Installation
 
-📄 Details on how to use trybox will be added here.
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/youruser/trybox.git
+   cd trybox
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   python -m trybox.main
 
 ## 🧪 Example
 
