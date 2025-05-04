@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 snippets/
 LICENSE
+build/
+trybox.egg-info/

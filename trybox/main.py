@@ -1,7 +1,7 @@
 import sys
 import os
-from sandbox import run_snippet
-from utils import save_snippet, list_snippets, load_snippet
+from trybox.sandbox import run_snippet
+from trybox.utils import save_snippet, list_snippets, load_snippet
 
 SNIPPET_DIR = os.path.join(os.path.dirname(__file__), "../snippets")
 os.makedirs(SNIPPET_DIR, exist_ok=True)
