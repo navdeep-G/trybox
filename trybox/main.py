@@ -21,7 +21,7 @@ def get_user_code_via_editor() -> str:
     editor = os.environ.get("EDITOR", "vi")
     with tempfile.NamedTemporaryFile(suffix=".py", delete=False) as tmp:
         tmp_path = tmp.name
-    subprocess.call([editor, tmp_path])
+    subprocess.call(["sh", "-c", f"{editor} '{tmp_path}'"])
     with open(tmp_path, "r") as f:
         code = f.read()
     os.remove(tmp_path)
@@ -40,7 +40,7 @@ def export_snippet_to_markdown(filename: str, code: str):
 
 def save_last_snippet_path(path: str):
     with open(LAST_SNIPPET_FILE, "w") as f:
-        f.write(path)
+        f.write(os.path.abspath(path))
 
 def load_last_snippet_path() -> str:
     if os.path.exists(LAST_SNIPPET_FILE):
@@ -48,8 +48,20 @@ def load_last_snippet_path() -> str:
             return f.read().strip()
     return ""
 
+def suggest_tags(existing_tags):
+    if not existing_tags:
+        return ""
+    print("\n[cyan]💡 Existing tags:[/cyan]", ", ".join(existing_tags))
+
 def new_snippet():
-    tag = input("Enter tag/description: ").strip()
+    snippets = list_snippets(SNIPPET_DIR)
+    existing_tags = list(set(tag for _, tag in snippets))
+    suggest_tags(existing_tags)
+
+    tag = input("Enter tag/description (or 'b' to go back): ").strip()
+    if tag.lower() == 'b':
+        print("[cyan]↩️ Back to main menu.[/cyan]")
+        return
     if not tag:
         print("[red]❌ Tag is required.[/red]")
         return
@@ -73,7 +85,10 @@ def run_existing():
         print("[yellow]📭 No saved snippets found.[/yellow]")
         return
 
-    search_term = input("🔍 Enter search term (press Enter to skip): ").strip().lower()
+    search_term = input("🔍 Enter search term (or 'b' to go back): ").strip().lower()
+    if search_term == 'b':
+        print("[cyan]↩️ Back to main menu.[/cyan]")
+        return
 
     print("\n[bold]📋 Saved Snippets:[/bold]")
     indexed = []
@@ -86,9 +101,9 @@ def run_existing():
             print(entry)
             indexed.append((i, fname))
 
-    print("[b]Enter the number to run, or 'x' to exit.[/b]")
+    print("[b]Enter the number to run, or 'b' to go back.[/b]")
     choice = input("Select snippet to run or export: ").strip()
-    if choice.lower() == 'x':
+    if choice.lower() == 'b':
         print("[cyan]↩️ Back to main menu.[/cyan]")
         return
 
@@ -150,4 +165,7 @@ def main():
         elif choice == "4":
             print("[blue]👋 Exiting TryBox. Goodbye![/blue]")
             break
+
+if __name__ == "__main__":
+    main()
 
