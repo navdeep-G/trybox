@@ -2,6 +2,7 @@ import os
 import sys
 import tempfile
 import subprocess
+import time
 from datetime import datetime
 from trybox.sandbox import run_snippet
 from trybox.utils import save_snippet, list_snippets, load_snippet
@@ -53,6 +54,12 @@ def suggest_tags(existing_tags):
         return ""
     console.print("\n[cyan]💡 Existing tags:[/cyan]", ", ".join(existing_tags))
 
+def time_and_run(code):
+    start = time.perf_counter()
+    run_snippet(code)
+    duration = time.perf_counter() - start
+    console.print(f"[green]✅ Snippet completed in {duration:.2f} seconds.[/green]")
+
 def new_snippet():
     snippets = list_snippets(SNIPPET_DIR)
     existing_tags = list(set(tag for _, tag in snippets))
@@ -77,7 +84,7 @@ def new_snippet():
     save_last_snippet_path(os.path.abspath(filename))
     console.print(f"[green]✅ Snippet saved to [bold]{filename}[/bold][/green]")
     console.rule("Running Snippet")
-    run_snippet(code)
+    time_and_run(code)
     console.rule("End of Output")
 
 def run_existing():
@@ -120,7 +127,7 @@ def run_existing():
 
         save_last_snippet_path(os.path.abspath(filename))
         console.rule("Running Snippet")
-        run_snippet(code)
+        time_and_run(code)
         console.rule("End of Output")
     except (ValueError, IndexError):
         console.print("[red]❌ Invalid selection.[/red]")
@@ -133,7 +140,7 @@ def run_last_snippet():
     code = load_snippet(path)
     console.print(Panel(code, title="🧾 Last Snippet", subtitle=path))
     console.rule("Running Snippet")
-    run_snippet(code)
+    time_and_run(code)
     console.rule("End of Output")
 
 def show_recent_snippets(n=5):
