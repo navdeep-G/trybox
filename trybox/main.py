@@ -36,7 +36,7 @@ def export_snippet_to_markdown(filename: str, code: str):
         md_file.write("```python\n")
         md_file.write(code)
         md_file.write("\n```")
-    print(f"[green]📤 Exported to {md_filename}[/green]")
+    console.print(f"[green]📤 Exported to {md_filename}[/green]")
 
 def save_last_snippet_path(path: str):
     with open(LAST_SNIPPET_FILE, "w") as f:
@@ -51,46 +51,47 @@ def load_last_snippet_path() -> str:
 def suggest_tags(existing_tags):
     if not existing_tags:
         return ""
-    print("\n[cyan]💡 Existing tags:[/cyan]", ", ".join(existing_tags))
+    console.print("\n[cyan]💡 Existing tags:[/cyan]", ", ".join(existing_tags))
 
 def new_snippet():
     snippets = list_snippets(SNIPPET_DIR)
     existing_tags = list(set(tag for _, tag in snippets))
     suggest_tags(existing_tags)
 
-    tag = input("Enter tag/description (or 'b' to go back): ").strip()
+    tag = input("[cyan]Enter tag/description (or 'b' to go back): [/cyan]").strip()
     if tag.lower() == 'b':
-        print("[cyan]↩️ Back to main menu.[/cyan]")
+        console.print("[cyan]↩️ Back to main menu.[/cyan]")
         return
     if not tag:
-        print("[red]❌ Tag is required.[/red]")
+        console.print("[red]❌ Tag is required.[/red]")
         return
 
-    print("📝 Opening your editor to write the snippet...")
+    console.print("[blue]📝 Opening your editor to write the snippet...[/blue]")
     code = get_user_code_via_editor()
 
     if not code.strip():
-        print("[yellow]⚠️ No code entered. Snippet not saved.[/yellow]")
+        console.print("[yellow]⚠️ No code entered. Snippet not saved.[/yellow]")
         return
 
     filename = save_snippet(code, tag, SNIPPET_DIR)
     save_last_snippet_path(os.path.abspath(filename))
-    print(f"[green]✅ Snippet saved to [bold]{filename}[/bold][/green]")
-    print("\n🚀 Running your snippet...\n")
+    console.print(f"[green]✅ Snippet saved to [bold]{filename}[/bold][/green]")
+    console.rule("Running Snippet")
     run_snippet(code)
+    console.rule("End of Output")
 
 def run_existing():
     snippets = list_snippets(SNIPPET_DIR)
     if not snippets:
-        print("[yellow]📭 No saved snippets found.[/yellow]")
+        console.print("[yellow]📭 No saved snippets found.[/yellow]")
         return
 
-    search_term = input("🔍 Enter search term (or 'b' to go back): ").strip().lower()
+    search_term = input("[cyan]🔍 Enter search term (or 'b' to go back): [/cyan]").strip().lower()
     if search_term == 'b':
-        print("[cyan]↩️ Back to main menu.[/cyan]")
+        console.print("[cyan]↩️ Back to main menu.[/cyan]")
         return
 
-    print("\n[bold]📋 Saved Snippets:[/bold]")
+    console.print("\n[bold magenta]📋 Saved Snippets:[/bold magenta]")
     indexed = []
     for i, (fname, tag) in enumerate(snippets):
         with open(fname, "r") as f:
@@ -98,13 +99,13 @@ def run_existing():
         timestamp = datetime.fromtimestamp(os.path.getctime(fname)).strftime("%b %d, %Y %H:%M")
         entry = f"[{i}] {os.path.basename(fname)} — {first_line or '(empty)'} (saved on {timestamp})"
         if not search_term or search_term in entry.lower():
-            print(entry)
+            console.print(entry)
             indexed.append((i, fname))
 
-    print("[b]Enter the number to run, or 'b' to go back.[/b]")
-    choice = input("Select snippet to run or export: ").strip()
+    console.print("[cyan]Enter the number to run, or 'b' to go back.[/cyan]")
+    choice = input("[cyan]Select snippet to run or export: [/cyan]").strip()
     if choice.lower() == 'b':
-        print("[cyan]↩️ Back to main menu.[/cyan]")
+        console.print("[cyan]↩️ Back to main menu.[/cyan]")
         return
 
     try:
@@ -118,21 +119,25 @@ def run_existing():
             export_snippet_to_markdown(filename, code)
 
         save_last_snippet_path(os.path.abspath(filename))
+        console.rule("Running Snippet")
         run_snippet(code)
+        console.rule("End of Output")
     except (ValueError, IndexError):
-        print("[red]❌ Invalid selection.[/red]")
+        console.print("[red]❌ Invalid selection.[/red]")
 
 def run_last_snippet():
     path = load_last_snippet_path()
     if not path or not os.path.exists(path):
-        print("[yellow]⚠️ No last snippet found.[/yellow]")
+        console.print("[yellow]⚠️ No last snippet found.[/yellow]")
         return
     code = load_snippet(path)
     console.print(Panel(code, title="🧾 Last Snippet", subtitle=path))
+    console.rule("Running Snippet")
     run_snippet(code)
+    console.rule("End of Output")
 
 def show_recent_snippets(n=5):
-    print("\n[bold]🕘 Recent Snippets:[/bold]")
+    console.print("\n[bold]🕘 Recent Snippets:[/bold]")
     snippets = sorted(os.listdir(SNIPPET_DIR), key=lambda f: os.path.getctime(os.path.join(SNIPPET_DIR, f)), reverse=True)
     count = 0
     for fname in snippets:
@@ -140,7 +145,7 @@ def show_recent_snippets(n=5):
             continue
         path = os.path.join(SNIPPET_DIR, fname)
         timestamp = datetime.fromtimestamp(os.path.getctime(path)).strftime("%b %d, %Y %H:%M")
-        print(f"• {fname} (saved on {timestamp})")
+        console.print(f"• {fname} (saved on {timestamp})")
         count += 1
         if count >= n:
             break
@@ -150,10 +155,10 @@ def main():
     show_recent_snippets()
 
     while True:
-        print("\n[1] ✍️  New Snippet")
-        print("[2] ▶️  Run Existing")
-        print("[3] ♻️  Run Last Snippet")
-        print("[4] ❌ Exit")
+        console.print("\n[1] ✍️  New Snippet")
+        console.print("[2] ▶️  Run Existing")
+        console.print("[3] ♻️  Run Last Snippet")
+        console.print("[4] ❌ Exit")
         choice = Prompt.ask("👉 Select an option", choices=["1", "2", "3", "4"], default="1")
 
         if choice == "1":
@@ -163,7 +168,7 @@ def main():
         elif choice == "3":
             run_last_snippet()
         elif choice == "4":
-            print("[blue]👋 Exiting TryBox. Goodbye![/blue]")
+            console.print("[blue]👋 Exiting TryBox. Goodbye![/blue]")
             break
 
 if __name__ == "__main__":
