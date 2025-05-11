@@ -4,19 +4,23 @@ import tempfile
 import subprocess
 import time
 from datetime import datetime
-from trybox.sandbox import run_snippet
-from trybox.utils import save_snippet, list_snippets, load_snippet
 from rich import print
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 from rich.markdown import Markdown
+from rich.traceback import install
+
+install(show_locals=True)
 
 console = Console()
 
 SNIPPET_DIR = os.path.join(os.path.dirname(__file__), "../snippets")
 LAST_SNIPPET_FILE = os.path.join(SNIPPET_DIR, ".last_snippet")
 os.makedirs(SNIPPET_DIR, exist_ok=True)
+
+def run_snippet(code: str):
+    exec(code, {})
 
 def get_user_code_via_editor() -> str:
     editor = os.environ.get("EDITOR", "vi")
@@ -55,12 +59,17 @@ def suggest_tags(existing_tags):
     console.print("\n[cyan]💡 Existing tags:[/cyan]", ", ".join(existing_tags))
 
 def time_and_run(code):
-    start = time.perf_counter()
-    run_snippet(code)
-    duration = time.perf_counter() - start
-    console.print(f"[green]✅ Snippet completed in {duration:.2f} seconds.[/green]")
+    try:
+        start = time.perf_counter()
+        run_snippet(code)
+        duration = time.perf_counter() - start
+        console.print(f"[green]✅ Snippet completed in {duration:.2f} seconds.[/green]")
+    except Exception:
+        console.print("[bold red]❌ An error occurred while running the snippet:[/bold red]")
+        raise
 
 def new_snippet():
+    from trybox.utils import save_snippet, list_snippets
     snippets = list_snippets(SNIPPET_DIR)
     existing_tags = list(set(tag for _, tag in snippets))
     suggest_tags(existing_tags)
@@ -88,6 +97,7 @@ def new_snippet():
     console.rule("End of Output")
 
 def run_existing():
+    from trybox.utils import list_snippets, load_snippet
     snippets = list_snippets(SNIPPET_DIR)
     if not snippets:
         console.print("[yellow]📭 No saved snippets found.[/yellow]")
@@ -133,6 +143,7 @@ def run_existing():
         console.print("[red]❌ Invalid selection.[/red]")
 
 def run_last_snippet():
+    from trybox.utils import load_snippet
     path = load_last_snippet_path()
     if not path or not os.path.exists(path):
         console.print("[yellow]⚠️ No last snippet found.[/yellow]")
