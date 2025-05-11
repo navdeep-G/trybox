@@ -45,7 +45,13 @@ def export_snippet_to_markdown(filename: str, code: str):
 
 def add_snippet_header(code: str, tag: str) -> str:
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
-    header = f"# trybox snippet: {tag} | saved {timestamp}"
+    py_version = f"{sys.version_info.major}.{sys.version_info.minor}"
+    header = (
+        f"# trybox snippet\n"
+        f"# tag: {tag}\n"
+        f"# saved: {timestamp}\n"
+        f"# python: {py_version}\n\n"
+    )
     return header + code
 
 def save_last_snippet_path(path: str):
