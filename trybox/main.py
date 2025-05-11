@@ -168,16 +168,35 @@ def show_recent_snippets(n=5):
         if count >= n:
             break
 
+def search_by_tag():
+    from trybox.utils import list_snippets, load_snippet
+    snippets = list_snippets(SNIPPET_DIR)
+    if not snippets:
+        console.print("[yellow]📭 No saved snippets found.[/yellow]")
+        return
+
+    tag_term = input("[cyan]🔎 Enter tag to search: [/cyan]").strip().lower()
+    console.print("[bold magenta]📋 Matching Snippets:[/bold magenta]")
+    found = False
+    for i, (fname, tag) in enumerate(snippets):
+        if tag_term in tag.lower():
+            timestamp = datetime.fromtimestamp(os.path.getctime(fname)).strftime("%b %d, %Y %H:%M")
+            console.print(f"[{i}] {os.path.basename(fname)} — [italic cyan]{tag}[/italic cyan] (saved on {timestamp})")
+            found = True
+    if not found:
+        console.print("[dim]No matching snippets found.[/dim]")
+
 def main():
     console.print(Panel.fit("[bold cyan]🧪 TryBox[/bold cyan]\nWelcome to your Python snippet lab! 🎉", title="Welcome"))
     show_recent_snippets()
 
     while True:
-        console.print("\n[1] ✍️  New Snippet")
+        console.print("[1] ✍️  New Snippet")
         console.print("[2] ▶️  Run Existing")
         console.print("[3] ♻️  Run Last Snippet")
-        console.print("[4] ❌ Exit")
-        choice = Prompt.ask("👉 Select an option", choices=["1", "2", "3", "4"], default="1")
+        console.print("[4] 🔎 Search by Tag")
+        console.print("[5] ❌ Exit")
+        choice = Prompt.ask("👉 Select an option", choices=["1", "2", "3", "4", "5"], default="1")
 
         if choice == "1":
             new_snippet()
@@ -185,6 +204,8 @@ def main():
             run_existing()
         elif choice == "3":
             run_last_snippet()
+        elif choice == "5":
+            search_by_tag()
         elif choice == "4":
             console.print("[blue]👋 Exiting TryBox. Goodbye![/blue]")
             break
