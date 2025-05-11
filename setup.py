@@ -9,11 +9,14 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "rich",  # required if using rich for UI/CLI output
+     "rich>=13.7.0",
+     "typer>=0.12.3",
+     "click<8.2.0",  # Avoids incompatibility with Typer
     ],
     entry_points={
         "console_scripts": [
             "trybox=trybox.main:main",
+            "trybox-cli=trybox.cli:app",
         ],
     },
     classifiers=[
