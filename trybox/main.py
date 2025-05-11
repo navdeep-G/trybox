@@ -43,6 +43,11 @@ def export_snippet_to_markdown(filename: str, code: str):
         md_file.write("\n```")
     console.print(f"[green]📤 Exported to {md_filename}[/green]")
 
+def add_snippet_header(code: str, tag: str) -> str:
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
+    header = f"# trybox snippet: {tag} | saved {timestamp}"
+    return header + code
+
 def save_last_snippet_path(path: str):
     with open(LAST_SNIPPET_FILE, "w") as f:
         f.write(os.path.abspath(path))
@@ -84,6 +89,7 @@ def new_snippet():
 
     console.print("[blue]📝 Opening your editor to write the snippet...[/blue]")
     code = get_user_code_via_editor()
+    code = add_snippet_header(code, tag)
 
     if not code.strip():
         console.print("[yellow]⚠️ No code entered. Snippet not saved.[/yellow]")
@@ -204,9 +210,9 @@ def main():
             run_existing()
         elif choice == "3":
             run_last_snippet()
-        elif choice == "5":
-            search_by_tag()
         elif choice == "4":
+            search_by_tag()
+        elif choice == "5":
             console.print("[blue]👋 Exiting TryBox. Goodbye![/blue]")
             break
 
