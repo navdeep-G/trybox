@@ -7,7 +7,7 @@ def save_snippet(code: str, tag: str, directory: str) -> str:
     Save a code snippet to a file with a timestamped filename.
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    safe_tag = tag.replace(' ', '_')
+    safe_tag = "_".join(tag.strip().split())
     filename = f"{safe_tag}_{timestamp}.py"
     filepath = Path(directory) / filename
     filepath.write_text(code)
@@ -18,13 +18,15 @@ def list_snippets(directory: str) -> List[Tuple[str, str]]:
     List all snippet files in a directory, returning their paths and human-readable tags.
     """
     path = Path(directory)
-    result = []
+    snippets = []
     for file in sorted(path.glob("*.py")):
-        # Remove timestamp to extract tag
-        name_parts = file.stem.rsplit("_", 1)
-        tag = name_parts[0].replace("_", " ") if len(name_parts) == 2 else file.stem
-        result.append((str(file), tag))
-    return result
+        parts = file.stem.rsplit("_", 1)
+        if len(parts) == 2 and parts[1].isdigit():
+            tag = parts[0].replace("_", " ")
+        else:
+            tag = file.stem.replace("_", " ")
+        snippets.append((str(file), tag))
+    return snippets
 
 def load_snippet(path: str) -> str:
     """
