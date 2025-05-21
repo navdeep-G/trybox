@@ -3,15 +3,20 @@ import tempfile
 import os
 
 def run_snippet(code: str):
-    with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as tmp:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as tmp:
         tmp.write(code)
-        tmp_filename = tmp.name
+        tmp_path = tmp.name
+
     print("\n--- Running ---")
     try:
-        subprocess.run(["python", tmp_filename], timeout=5, check=True)
+        subprocess.run(["python", tmp_path], timeout=5, check=True)
     except subprocess.CalledProcessError as e:
-        print("Error:", e)
+        print(f"Error: {e}")
     except subprocess.TimeoutExpired:
         print("Execution timed out")
     finally:
-        os.remove(tmp_filename)
+        try:
+            os.remove(tmp_path)
+        except OSError as e:
+            print(f"Failed to delete temporary file: {e}")
+
